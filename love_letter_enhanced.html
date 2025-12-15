@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter For You</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Crimson+Text:ital@0;1&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #8b7355 0%, #6b5d52 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Crimson Text', serif;
+            overflow-x: hidden;
+        }
+
+        .wooden-desk {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(90deg, 
+                    rgba(0,0,0,0.03) 0px, 
+                    transparent 1px, 
+                    transparent 40px, 
+                    rgba(0,0,0,0.03) 41px),
+                linear-gradient(145deg, #8b7355 0%, #6b5d52 100%);
+            z-index: 0;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .letter-container {
+            position: relative;
+            z-index: 2;
+            width: 650px;
+            max-width: 95%;
+            background: #f9f7f1;
+            padding: 60px 50px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 0 100px rgba(139, 115, 85, 0.1);
+            position: relative;
+            animation: unfold 1.5s ease-out;
+            transform-origin: center;
+        }
+
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(0deg, 
+                    transparent, 
+                    transparent 31px, 
+                    rgba(200, 180, 150, 0.3) 31px, 
+                    rgba(200, 180, 150, 0.3) 32px);
+            pointer-events: none;
+        }
+
+        .letter-container::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid rgba(139, 115, 85, 0.2);
+            pointer-events: none;
+        }
+
+        @keyframes unfold {
+            0% {
+                transform: perspective(1000px) rotateX(-90deg);
+                opacity: 0;
+            }
+            50% {
+                transform: perspective(1000px) rotateX(-45deg);
+                opacity: 0.5;
+            }
+            100% {
+                transform: perspective(1000px) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+
+        .paper-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.5"/></svg>');
+            pointer-events: none;
+        }
+
+        .heart-sketch {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 30px;
+            position: relative;
+            animation: heartFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes heartFloat {
+            0%, 100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        .date {
+            text-align: right;
+            font-size: 16px;
+            color: #8b7355;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .salutation {
+            font-family: 'Dancing Script', cursive;
+            font-size: 38px;
+            color: #c67b5c;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .letter-body {
+            font-size: 20px;
+            line-height: 2;
+            color: #3d3d3d;
+            margin-bottom: 25px;
+            text-align: justify;
+            position: relative;
+        }
+
+        .letter-body p {
+            margin-bottom: 32px;
+            text-indent: 40px;
+        }
+
+        /* Highlighted romantic words */
+        .highlight {
+            background: linear-gradient(120deg, rgba(255, 235, 150, 0.4) 0%, rgba(255, 220, 120, 0.5) 100%);
+            padding: 2px 4px;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+            animation: highlightGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes highlightGlow {
+            0%, 100% {
+                background: linear-gradient(120deg, rgba(255, 235, 150, 0.4) 0%, rgba(255, 220, 120, 0.5) 100%);
+            }
+            50% {
+                background: linear-gradient(120deg, rgba(255, 235, 150, 0.6) 0%, rgba(255, 220, 120, 0.7) 100%);
+            }
+        }
+
+        .underline-love {
+            position: relative;
+            font-weight: 600;
+            color: #c67b5c;
+        }
+
+        .underline-love::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #c67b5c;
+            animation: underlineDraw 1s ease-out forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes underlineDraw {
+            to {
+                width: 100%;
+            }
+        }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: #c67b5c;
+            text-align: right;
+            margin-top: 40px;
+            margin-right: 40px;
+        }
+
+        .ink-splatter {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(198, 123, 92, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: splatGrow 2s ease-out;
+        }
+
+        @keyframes splatGrow {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .splatter1 { top: 15%; right: 10%; width: 30px; height: 30px; animation-delay: 1s; }
+        .splatter2 { bottom: 20%; left: 8%; width: 25px; height: 25px; animation-delay: 1.5s; }
+        .splatter3 { top: 45%; left: 5%; width: 15px; height: 15px; animation-delay: 2s; }
+
+        .coffee-stain {
+            position: absolute;
+            bottom: 50px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 115, 85, 0.1) 0%, transparent 60%);
+            border: 1px solid rgba(139, 115, 85, 0.15);
+            animation: stainAppear 1s ease-out 2.5s both;
+        }
+
+        @keyframes stainAppear {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Paper clip */
+        .paper-clip {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            width: 50px;
+            height: 80px;
+            border: 3px solid #a8a8a8;
+            border-radius: 20px 20px 8px 8px;
+            border-bottom: none;
+            transform: rotate(-15deg);
+            z-index: 10;
+            box-shadow: 
+                inset 0 0 10px rgba(0,0,0,0.1),
+                2px 2px 5px rgba(0,0,0,0.2);
+            animation: clipSlide 1s ease-out 0.5s both;
+        }
+
+        .paper-clip::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 8px;
+            width: 30px;
+            height: 15px;
+            border: 3px solid #a8a8a8;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+        @keyframes clipSlide {
+            from {
+                top: -100px;
+                opacity: 0;
+            }
+            to {
+                top: 30px;
+                opacity: 1;
+            }
+        }
+
+        /* Washi tape */
+        .washi-tape {
+            position: absolute;
+            height: 30px;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 182, 193, 0.6),
+                rgba(255, 182, 193, 0.6) 10px,
+                rgba(255, 192, 203, 0.6) 10px,
+                rgba(255, 192, 203, 0.6) 20px
+            );
+            transform: rotate(-3deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 5;
+            opacity: 0.8;
+        }
+
+        .tape-top {
+            top: 0;
+            left: -10px;
+            right: -10px;
+            animation: tapeStick 0.8s ease-out 0.3s both;
+            transform-origin: center;
+        }
+
+        @keyframes tapeStick {
+            from {
+                transform: rotate(-3deg) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: rotate(-3deg) translateY(0);
+                opacity: 0.8;
+            }
+        }
+
+        /* Polaroid photo */
+        .polaroid {
+            position: absolute;
+            bottom: 80px;
+            left: -60px;
+            width: 120px;
+            height: 140px;
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transform: rotate(-8deg);
+            animation: photoSlide 1s ease-out 1.2s both;
+        }
+
+        @keyframes photoSlide {
+            from {
+                left: -200px;
+                opacity: 0;
+            }
+            to {
+                left: -60px;
+                opacity: 1;
+            }
+        }
+
+        .polaroid-inner {
+            width: 100%;
+            height: 85px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 16px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Sticky note */
+        .sticky-note {
+            position: absolute;
+            top: 50%;
+            right: -70px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffd89b 0%, #ffeb99 100%);
+            padding: 15px;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+            transform: rotate(5deg);
+            font-family: 'Dancing Script', cursive;
+            font-size: 14px;
+            color: #8b7355;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            animation: noteAppear 0.8s ease-out 1.8s both;
+        }
+
+        @keyframes noteAppear {
+            from {
+                right: -200px;
+                opacity: 0;
+                transform: rotate(5deg) scale(0.5);
+            }
+            to {
+                right: -70px;
+                opacity: 1;
+                transform: rotate(5deg) scale(1);
+            }
+        }
+
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
+        }
+
+        /* Pressed flower */
+        .pressed-flower {
+            position: absolute;
+            bottom: 40px;
+            right: 120px;
+            width: 50px;
+            height: 50px;
+            opacity: 0.6;
+            animation: flowerAppear 1s ease-out 2.2s both;
+        }
+
+        @keyframes flowerAppear {
+            from {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+        }
+
+        /* Floating hearts around main heart */
+        .mini-heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(198, 123, 92, 0.4);
+            animation: floatAway 3s ease-in-out infinite;
+        }
+
+        @keyframes floatAway {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-40px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .mini-heart:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .mini-heart:nth-child(2) { top: 30%; right: 15%; animation-delay: 1s; }
+        .mini-heart:nth-child(3) { top: 50%; left: 5%; animation-delay: 2s; }
+        .mini-heart:nth-child(4) { top: 40%; right: 10%; animation-delay: 1.5s; }
+
+        @media (max-width: 768px) {
+            .letter-container {
+                padding: 40px 30px;
+            }
+            .letter-body {
+                font-size: 18px;
+                line-height: 1.9;
+            }
+            .polaroid, .sticky-note {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wooden-desk"></div>
+    <canvas id="heartCanvas"></canvas>
+    
+    <div class="letter-container">
+        <div class="paper-texture"></div>
+        <div class="washi-tape tape-top"></div>
+        <div class="paper-clip"></div>
+        <div class="ink-splatter splatter1"></div>
+        <div class="ink-splatter splatter2"></div>
+        <div class="ink-splatter splatter3"></div>
+        <div class="coffee-stain"></div>
+        
+        <div class="heart-sketch" id="heartContainer">
+            <div class="mini-heart">♡</div>
+            <div class="mini-heart">♡</div>
+            <div class="mini-heart">♡</div>
+            <div class="mini-heart">♡</div>
+        </div>
+        
+        <div class="date">December 15, 2025</div>
+        
+        <div class="salutation">My Dearest,</div>
+        
+        <div class="letter-body">
+            <p>
+                There are moments in life when words feel too small to hold what the <span class="highlight">heart</span> wants to say. This is one of those moments. As I write this, I'm thinking about all the little things—your <span class="underline-love">laugh</span> that makes everything brighter, the way you understand me without words, how you turn ordinary days into <span class="highlight">beautiful memories</span>.
+            </p>
+            <p>
+                You've become the rhythm my heart beats to, the reason behind my <span class="highlight">smiles</span>, and the calm in every storm. I never knew <span class="underline-love">love</span> could feel like coming home until I met you. Every day with you is a <span class="highlight">gift</span> I never want to take for granted.
+            </p>
+            <p>
+                This heart I've made for you—it beats with every <span class="highlight">memory</span> we've created together, every <span class="underline-love">dream</span> we've shared, and every <span class="highlight">tomorrow</span> I hope to spend by your side. You are my <span class="underline-love">always and forever</span>.
+            </p>
+        </div>
+        
+        <div class="signature">Forever Yours ♡</div>
+        
+        <div class="pressed-flower">🌸</div>
+    </div>
+
+    <div class="polaroid">
+        <div class="polaroid-inner">Us ♡</div>
+    </div>
+
+    <div class="sticky-note">
+        You make my heart smile ♡
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Floating paper particles (dust in the air)
+        class PaperDust {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.3 - 0.1;
+                this.alpha = Math.random() * 0.3 + 0.1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(249, 247, 241, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Floating hearts
+        class FloatingHeart {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 50;
+                this.size = Math.random() * 15 + 10;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.alpha = Math.random() * 0.3 + 0.2;
+                this.wobble = Math.random() * Math.PI * 2;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.wobble) * 0.5;
+                this.wobble += 0.05;
+
+                if (this.y < -50) {
+                    this.y = canvas.height + 50;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.font = `${this.size}px Arial`;
+                ctx.fillStyle = `rgba(198, 123, 92, ${this.alpha})`;
+                ctx.fillText('♡', 0, 0);
+                ctx.restore();
+            }
+        }
+
+        const dustParticles = [];
+        for (let i = 0; i < 30; i++) {
+            dustParticles.push(new PaperDust());
+        }
+
+        const floatingHearts = [];
+        for (let i = 0; i < 8; i++) {
+            floatingHearts.push(new FloatingHeart());
+        }
+
+        function animateBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            dustParticles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            floatingHearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            
+            requestAnimationFrame(animateBackground);
+        }
+
+        animateBackground();
+
+        // Hand-drawn heart animation
+        const heartContainer = document.getElementById('heartContainer');
+        const heartSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        heartSVG.setAttribute('width', '140');
+        heartSVG.setAttribute('height', '140');
+        heartSVG.setAttribute('viewBox', '0 0 120 120');
+        heartSVG.style.overflow = 'visible';
+        heartContainer.appendChild(heartSVG);
+
+        // Create animated particles around heart
+        for (let i = 0; i < 12; i++) {
+            const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const angle = (i / 12) * Math.PI * 2;
+            const radius = 55;
+            const cx = 60 + Math.cos(angle) * radius;
+            const cy = 60 + Math.sin(angle) * radius;
+            
+            particle.setAttribute('cx', cx);
+            particle.setAttribute('cy', cy);
+            particle.setAttribute('r', '2');
+            particle.setAttribute('fill', '#c67b5c');
+            particle.setAttribute('opacity', '0.6');
+            
+            const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            animate.setAttribute('attributeName', 'r');
+            animate.setAttribute('values', '2;4;2');
+            animate.setAttribute('dur', '2s');
+            animate.setAttribute('repeatCount', 'indefinite');
+            animate.setAttribute('begin', `${i * 0.15}s`);
+            
+            const animateOpacity = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+            animateOpacity.setAttribute('attributeName', 'opacity');
+            animateOpacity.setAttribute('values', '0.6;1;0.6');
+            animateOpacity.setAttribute('dur', '2s');
+            animateOpacity.setAttribute('repeatCount', 'indefinite');
+            animateOpacity.setAttribute('begin', `${i * 0.15}s`);
+            
+            particle.appendChild(animate);
+            particle.appendChild(animateOpacity);
+            heartSVG.appendChild(particle);
+        }
+
+        // Create hand-drawn style heart path
+        const heartPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = 'M60,100 C60,100 20,70 20,45 C20,30 30,20 40,20 C50,20 55,25 60,35 C65,25 70,20 80,20 C90,20 100,30 100,45 C100,70 60,100 60,100 Z';
+        
+        heartPath.setAttribute('d', d);
+        heartPath.setAttribute('fill', 'none');
+        heartPath.setAttribute('stroke', '#c67b5c');
+        heartPath.setAttribute('stroke-width', '2.5');
+        heartPath.setAttribute('stroke-linecap', 'round');
+        heartPath.setAttribute('stroke-linejoin', 'round');
+        heartPath.setAttribute('opacity', '0.8');
+        
+        // Add slight imperfection for hand-drawn feel
+        heartPath.style.filter = 'url(#roughen)';
+        
+        const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+        filter.setAttribute('id', 'roughen');
+        const turbulence = document.createElementNS('http://www.w3.org/2000/svg', 'feTurbulence');
+        turbulence.setAttribute('baseFrequency', '0.02');
+        turbulence.setAttribute('numOctaves', '2');
+        turbulence.setAttribute('result', 'turbulence');
+        const displace = document.createElementNS('http://www.w3.org/2000/svg', 'feDisplacementMap');
+        displace.setAttribute('in', 'SourceGraphic');
+        displace.setAttribute('in2', 'turbulence');
+        displace.setAttribute('scale', '2');
+        filter.appendChild(turbulence);
+        filter.appendChild(displace);
+        
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        defs.appendChild(filter);
+        heartSVG.appendChild(defs);
+        heartSVG.appendChild(heartPath);
+
+        // Animate stroke drawing
+        const pathLength = heartPath.getTotalLength();
+        heartPath.style.strokeDasharray = pathLength;
+        heartPath.style.strokeDashoffset = pathLength;
+        
+        let drawProgress = 0;
+        function drawHeart() {
+            if (drawProgress < pathLength) {
+                drawProgress += 2;
+                heartPath.style.strokeDashoffset = pathLength - drawProgress;
+                requestAnimationFrame(drawHeart);
+            } else {
+                // Add fill after drawing
+                setTimeout(() => {
+                    heartPath.style.transition = 'fill 1s ease-in-out';
+                    heartPath.setAttribute('fill', 'rgba(198, 123, 92, 0.15)');
+                    
+                    // Add pulsing animation
+                    const pulseAnimate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+                    pulseAnimate.setAttribute('attributeName', 'opacity');
+                    pulseAnimate.setAttribute('values', '0.8;1;0.8');
+                    pulseAnimate.setAttribute('dur', '2s');
+                    pulseAnimate.setAttribute('repeatCount', 'indefinite');
+                    heartPath.appendChild(pulseAnimate);
+                }, 200);
+            }
+        }
+
+        setTimeout(() => {
+            drawHeart();
+        }, 800);
+
+        // Add subtle sketch lines inside heart
+        for (let i = 0; i < 8; i++) {
+            setTimeout(() => {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                const startX = 35 + Math.random() * 50;
+                const startY = 40 + Math.random() * 40;
+                const endX = startX + Math.random() * 20 - 10;
+                const endY = startY + Math.random() * 15;
+                
+                line.setAttribute('x1', startX);
+                line.setAttribute('y1', startY);
+                line.setAttribute('x2', endX);
+                line.setAttribute('y2', endY);
+                line.setAttribute('stroke', '#c67b5c');
+                line.setAttribute('stroke-width', '0.8');
+                line.setAttribute('opacity', '0.3');
+                line.setAttribute('stroke-linecap', 'round');
+                
+                heartSVG.appendChild(line);
+            }, 2000 + i * 200);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
